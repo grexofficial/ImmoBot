@@ -1,0 +1,27 @@
+{
+  "name": "immobot",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "main": "src/index.js",
+  "scripts": {
+    "lint": "eslint src",
+    "test": "NODE_OPTIONS='--experimental-vm-modules' jest",
+    "dev": "NODE_ENV=development node --watch src/index.js",
+    "start": "NODE_ENV=production node src/index.js"
+  },
+  "author": "Jan André Greschner",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.4.0",
+    "dotenv": "^16.3.1",
+    "mongodb-uri": "^0.9.7",
+    "mongoose": "^7.4.0",
+    "pino": "^8.14.1"
+  },
+  "devDependencies": {
+    "eslint": "^8.45.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.27.5"
+  }
+}
