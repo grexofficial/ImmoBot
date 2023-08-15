@@ -28,7 +28,7 @@ jobs:
         with:
           push: true
           platforms: linux/amd64,linux/arm64
-          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/immo:latest
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/immo:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
       - 
