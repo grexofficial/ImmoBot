@@ -1,11 +1,11 @@
 on:
   workflow_dispatch:   
 
-name: AzureContainerInstanceDeploy
+name: Azure Container Instance Deployment
 
 jobs:
 
-  build-and-deploy:
+  deploy-docker-image-to-aci:
     runs-on: ubuntu-latest
     steps:
     

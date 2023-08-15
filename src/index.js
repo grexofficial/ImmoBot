@@ -71,7 +71,7 @@ try {
   // await aggregatedModel.insertMany(aggregatedData);
 
   // await dataModel.deleteMany({}); // remove all raw data
-  console.log(aggregatedData);
+  console.log('Test');
 } catch (error) {
   console.error(error);
 }
