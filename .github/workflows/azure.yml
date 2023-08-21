@@ -1,4 +1,6 @@
 on:
+  schedule:
+    - cron:  '0 17 * * *'
   workflow_dispatch:   
 
 name: Azure Container Instance Deployment
@@ -18,13 +20,9 @@ jobs:
       uses: azure/CLI@v1
       with:
         inlineScript: |
-          az container create \
-          --resource-group ${{ secrets.RESOURCE_GROUP }} \
-          --name immobot \
-          --image ${{ secrets.DOCKERHUB_USERNAME }}/immo:latest \
-          --restart-policy OnFailure \
-          --sku Standard \
-          --secure-environment-variables 'MONGO_DB_URI'='${{ secrets.MONGO_DB_URI }}'
+          az container start \
+          -g ${{ secrets.RESOURCE_GROUP }} \
+          -n immobot
           az logout
           az cache purge
           az account clear

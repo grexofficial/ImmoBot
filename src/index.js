@@ -5,7 +5,7 @@ import db from './db.js';
 
 await db.connect();
 
-const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+const delay = (ms) => new Promise((resolve) => { setTimeout(resolve, ms); });
 
 const numberOfResults = +process.env.RESULTS_PER_PAGE || 200; // max possible number 200
 
@@ -15,14 +15,15 @@ try {
   const pages = Math.ceil(rowsFound / numberOfResults); // calculate number of pages to iterate
   // eslint-disable-next-line no-plusplus
   for (let i = 1; i <= pages; i++) {
-    /* getListings(`https://www.willhaben.at/iad/immobilien/eigentumswohnung?rows=${numberOfResults}&page=${i}&areaId=1&areaId=2&areaId=3&areaId=4&areaId=5&areaId=6&areaId=7&areaId=8&areaId=900`).then(
+    getListings(`https://www.willhaben.at/iad/immobilien/eigentumswohnung?rows=${numberOfResults}&page=${i}&areaId=1&areaId=2&areaId=3&areaId=4&areaId=5&areaId=6&areaId=7&areaId=8&areaId=900`).then(
       (result) => {
         dataModel.insertMany(result);
       },
     );
 
     // 1 sec. delay needed otherwise willhaben will terminate the request instantly
-    await delay(1000); */
+    // eslint-disable-next-line no-await-in-loop
+    await delay(1000);
   }
 
   // aggregate rawData
@@ -68,10 +69,8 @@ try {
   ]);
 
   // insert aggregated Data to aggregatedData collection
-  // await aggregatedModel.insertMany(aggregatedData);
-
-  // await dataModel.deleteMany({}); // remove all raw data
-  console.log('Test3');
+  await aggregatedModel.insertMany(aggregatedData);
+  await dataModel.deleteMany({}); // remove all raw data
 } catch (error) {
   console.error(error);
 }
