@@ -3,7 +3,7 @@ import { getListings, getMetadata } from './api.js';
 import dataModel from './dataModel.js';
 import db from './db.js';
 
-await db();
+await db.connect();
 
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -75,3 +75,5 @@ try {
 } catch (error) {
   console.error(error);
 }
+
+await db.disconnect();
