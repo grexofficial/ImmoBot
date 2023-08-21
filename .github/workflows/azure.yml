@@ -18,6 +18,13 @@ jobs:
       uses: azure/CLI@v1
       with:
         inlineScript: |
+          az container create \
+          --resource-group ${{ secrets.RESOURCE_GROUP }} \
+          --name immobot \
+          --image ${{ secrets.DOCKERHUB_USERNAME }}/immo:latest \
+          --restart-policy Never \
+          --sku Standard \
+          --secure-environment-variables 'MONGO_DB_URI'='${{ secrets.MONGO_DB_URI }}'
           az logout
           az cache purge
           az account clear
