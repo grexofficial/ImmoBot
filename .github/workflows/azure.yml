@@ -22,7 +22,7 @@ jobs:
           --resource-group ${{ secrets.RESOURCE_GROUP }} \
           --name immobot \
           --image ${{ secrets.DOCKERHUB_USERNAME }}/immo:latest \
-          --restart-policy Never \
+          --restart-policy OnFailure \
           --sku Standard \
           --secure-environment-variables 'MONGO_DB_URI'='${{ secrets.MONGO_DB_URI }}'
           az logout
