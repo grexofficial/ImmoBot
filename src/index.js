@@ -10,8 +10,10 @@ const delay = (ms) => new Promise((resolve) => { setTimeout(resolve, ms); });
 const numberOfResults = +process.env.RESULTS_PER_PAGE || 200; // max possible number 200
 
 try {
-  // await getListings(`https://www.willhaben.at/iad/immobilien/eigentumswohnung?rows=${numberOfResults}&page=1`);
+  // const r = await getListings(`https://www.willhaben.at/iad/immobilien/eigentumswohnung?rows=${numberOfResults}&page=1`);
+  // console.log(r);
   const { rowsFound } = await getMetadata('https://www.willhaben.at/iad/immobilien/eigentumswohnung?rows=1&areaId=1&areaId=2&areaId=3&areaId=4&areaId=5&areaId=6&areaId=7&areaId=8&areaId=900'); // get number of results
+  // console.log(rowsFound);
   const pages = Math.ceil(rowsFound / numberOfResults); // calculate number of pages to iterate
   // eslint-disable-next-line no-plusplus
   for (let i = 1; i <= pages; i++) {

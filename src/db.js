@@ -18,19 +18,25 @@ function encodeMongoURI(urlString) {
 }
 
 // Connect to database using by mongoURI
-const connect = () => mongoose
-  .connect(encodeMongoURI(mongoURI))
-  .then(() => {
+const connect = async () => {
+  try {
+    await mongoose.connect(encodeMongoURI(mongoURI));
     logger.info('Connection to database successful!');
-  })
-  .catch((err) => logger.error(`Error connecting to database: ${err}`));
+  } catch (err) {
+    logger.error(`Error connecting to database: ${err}`);
+  }
+};
 
 // Disconnect to database. Runs .close() on all connections in parallel.
-const disconnect = () => mongoose
-  .disconnect()
-  .then(() => {
-    logger.info('Disconnection to database successful!');
-  })
-  .catch((err) => logger.error(`Error disconnecting to database: ${err}`));
+const disconnect = async () => {
+  if (mongoose.connection.readyState) {
+    try {
+      await mongoose.disconnect();
+      logger.info('Disconnection from database successful!');
+    } catch (err) {
+      logger.error(`Error disconnecting from database: ${err}`);
+    }
+  }
+};
 
 export default { connect, disconnect };

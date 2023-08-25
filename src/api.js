@@ -1,5 +1,4 @@
-/* eslint-disable camelcase */
-const getListings = async (url) => {
+const extractJSONFromHTML = async (url) => {
   if (!url) {
     throw new Error('URL undefined');
   }
@@ -7,70 +6,51 @@ const getListings = async (url) => {
   const response = await fetch(url);
 
   if (!response.ok) {
-    throw new Error(`An HTTP-Error has been occured: ${response.status} ${response.statusText}`);
+    throw new Error(`An HTTP-Error has occurred: ${response.status} ${response.statusText}`);
   }
 
   const str = await response.text();
+  const startTag = '<script id="__NEXT_DATA__" type="application/json">';
+  const start = str.indexOf(startTag) + startTag.length;
+  const end = str.indexOf('</script>', start);
 
-  const temp = str.substring(str.indexOf('<script id="__NEXT_DATA__" type="application/json">') + '<script id="__NEXT_DATA__" type="application/json">'.length);
-  const result = JSON.parse(temp.substring(0, temp.indexOf('</script>')));
-  const returnArray = [];
+  return JSON.parse(str.substring(start, end));
+};
 
-  result.props.pageProps.searchResult.advertSummaryList.advertSummary.forEach((element) => {
-    const tempElement = element;
-    element.attributes.attribute.forEach((element2) => {
-      const [val] = element2.values;
-      // eslint-disable-next-line no-restricted-globals
-      tempElement[element2.name.toLowerCase()] = isNaN(val) ? val : +val;
+const getListings = async (url) => {
+  const result = await extractJSONFromHTML(url);
+
+  if (!result?.props?.pageProps?.searchResult?.advertSummaryList?.advertSummary) {
+    throw new Error('Unexpected JSON structure');
+  }
+
+  return result.props.pageProps.searchResult.advertSummaryList.advertSummary.map((element) => {
+    const attributes = {};
+    element.attributes.attribute.forEach((attr) => {
+      const [val] = attr.values;
+      attributes[attr.name.toLowerCase()] = Number.isNaN(Number(val)) ? val : +val;
     });
 
-    const picked = (({
-      price,
-      state,
-      district,
-      location,
-      postcode,
-      property_type,
-      number_of_rooms,
-      estate_size,
-      isprivate,
-    }) => ({
-      property_type,
-      state,
-      district,
-      postcode,
-      location,
-      number_of_rooms,
-      price,
-      estate_size,
-      isprivate,
-    }))(tempElement);
-
-    if (isNaN(picked.price)) {
-      picked.price = null;
-    }
-
-    returnArray.push(picked);
+    return {
+      property_type: attributes.property_type,
+      state: attributes.state,
+      district: attributes.district,
+      postcode: attributes.postcode,
+      location: attributes.location,
+      number_of_rooms: attributes.number_of_rooms,
+      price: Number.isNaN(attributes.price) ? null : attributes.price,
+      estate_size: attributes.estate_size,
+      isprivate: attributes.isprivate,
+    };
   });
-
-  return returnArray;
 };
 
 const getMetadata = async (url) => {
-  if (!url) {
-    throw new Error('URL undefined');
+  const result = await extractJSONFromHTML(url);
+
+  if (!result?.props?.pageProps?.searchResult) {
+    throw new Error('Unexpected JSON structure');
   }
-
-  const response = await fetch(url);
-
-  if (!response.ok) {
-    throw new Error(`An HTTP-Error has been occured: ${response.status} ${response.statusText}`);
-  }
-
-  const str = await response.text();
-
-  const temp = str.substring(str.indexOf('<script id="__NEXT_DATA__" type="application/json">') + '<script id="__NEXT_DATA__" type="application/json">'.length);
-  const result = JSON.parse(temp.substring(0, temp.indexOf('</script>')));
 
   return result.props.pageProps.searchResult;
 };
