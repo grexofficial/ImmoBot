@@ -38,7 +38,7 @@ const getListings = async (url) => {
       postcode: attributes.postcode,
       location: attributes.location,
       number_of_rooms: attributes.number_of_rooms,
-      price: Number.isNaN(attributes.price) ? null : attributes.price,
+      price: isNaN(attributes.price) ? null : attributes.price,
       estate_size: attributes.estate_size,
       isprivate: attributes.isprivate,
     };
